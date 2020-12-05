@@ -7,7 +7,6 @@ import './_login.css';
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onSignIn = this.onSignIn.bind(this);
 
@@ -37,29 +36,13 @@ class Login extends Component {
     });
   }
 
-  handleSubmit() {
-    let userData = {
-      'user_name': this.state.userName,
-      'password': this.state.password
-    };
-    AuthApi.login(userData).then((response) => {
-      if (response.data.p_out_mssg === 'Success') {
-        this.props.history.push('/dashboard');
-      } else {
-        this.props.history.push('/unauthorized');
-      }
-    }).catch(() => {
-      this.props.history.push('/unauthorized');
-    });
-  }
-
   render() {
     return (
       <div className="col d-flex justify-content-center">
         <div className="card card-signin my-5 shadow-lg">
           <div className="card-body">
             <h5 className="card-title text-center">Sign In</h5>
-            <form onSubmit={this.handleSubmit}>
+            <form>
               <div className="form-group">
                 <label htmlFor="userName">User Name:</label>
                 <input
