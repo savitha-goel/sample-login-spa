@@ -1,18 +1,32 @@
 
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+//import history from '../history';
 import AuthApi from '../services/authApi';
 import './_login.css';
 
 function Login() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const history = useHistory();
 
   const handleUserNameChange = e => {
+    let uName = e.target.value;
+    if (uName === '') {
+      setErrors({
+        userName: 'User Name cannot be empty'
+      });
+    }
     setUserName(e.target.value);
   };
   const handlePasswordChange = e => {
+    let pwd = e.target.value;
+    if (pwd === '') {
+      setErrors({
+        password: 'Password cannot be empty'
+      });
+    }
     setPassword(e.target.value);
   };
 
@@ -24,7 +38,7 @@ function Login() {
 
     AuthApi.login(userData).then((response) => {
       if (response.data.p_out_mssg === 'Success') {
-        history.push('/dashboard');
+        history.push('/dashboard/' + userName);
       } else {
         history.push('/unauthorized');
       }
@@ -49,6 +63,7 @@ function Login() {
                 placeholder="Enter User Name"
                 onChange={handleUserNameChange}
               />
+              <div className="text-danger">{errors.userName}</div>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password:</label>
@@ -60,9 +75,10 @@ function Login() {
                 placeholder="Enter your password"
                 onChange={handlePasswordChange}
               />
+              <div className="text-danger">{errors.password}</div>
             </div>
             <div className="float-right">
-              <button type="button" onClick={() => onSignIn()} className="btn btn-secondary btn-sm custom-btn-class">
+              <button type="button" disabled={userName === '' || password === ''} onClick={() => onSignIn()} className="btn btn-secondary btn-sm custom-btn-class">
               Login
               </button>
             </div>
